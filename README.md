@@ -122,3 +122,64 @@ cd math-prog/cpo-dataset/machine-learn/WDBC/
 
 ## EDA
 Correlation between features:
+![corr plot](https://github.com/Aytantabriz/breast-cancer-diagnostic-tf/blob/main/correlation.png)
+
+## Creating the model
+
+    # For a binary classification problem
+    model.compile(optimizer='rmsprop',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
+                  
+```
+model = Sequential()
+model.add(Dense(units=30,activation='relu'))
+model.add(Dense(units=15,activation='relu'))
+model.add(Dense(units=1,activation='sigmoid'))
+model.compile(loss='binary_crossentropy', optimizer='adam')
+```
+## Testing model fit
+#### Example 1 - Choosing too many epochs and overfitting!
+```
+model.fit(x=X_train, 
+          y=y_train, 
+          epochs=600,
+          validation_data=(X_test, y_test), verbose=1
+          )
+```
+
+![](https://github.com/Aytantabriz/breast-cancer-diagnostic-tf/blob/main/loss%20plot.png)
+
+#### Example 2 - Early Stopping
+```
+early_stop = EarlyStopping(monitor='val_loss', mode='min', verbose=1, patience=25)
+model.fit(x=X_train, 
+          y=y_train, 
+          epochs=600,
+          validation_data=(X_test, y_test), verbose=1,
+          callbacks=[early_stop]
+          )
+```
+
+![](https://github.com/Aytantabriz/breast-cancer-diagnostic-tf/blob/main/loss%20plot_2.png)
+
+#### Example 3 - Adding in DropOut layers
+```
+model = Sequential()
+model.add(Dense(units=30,activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(units=15,activation='relu'))
+model.add(Dropout(0.5))
+model.add(Dense(units=1,activation='sigmoid'))
+model.compile(loss='binary_crossentropy', optimizer='adam')
+
+model.fit(x=X_train, 
+          y=y_train, 
+          epochs=600,
+          validation_data=(X_test, y_test), verbose=1,
+          callbacks=[early_stop]
+          )
+```
+
+![](https://github.com/Aytantabriz/breast-cancer-diagnostic-tf/blob/main/loss%20plot_3.png)
+ 
